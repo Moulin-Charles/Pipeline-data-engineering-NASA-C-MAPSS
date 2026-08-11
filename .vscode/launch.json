@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Envoyer les données en Kafka à Redpanda",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}\\producer.py",
+      "args": ["${input:cmapssFile}"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "cmapssFile",
+      "type": "pickString",
+      "description": "Fichier C-MAPSS à rejouer",
+      "options": [
+        "CMAPSSData/train_FD001.txt",
+        "CMAPSSData/train_FD002.txt",
+        "CMAPSSData/train_FD003.txt",
+        "CMAPSSData/train_FD004.txt",
+        "CMAPSSData/test_FD001.txt",
+        "CMAPSSData/test_FD002.txt",
+        "CMAPSSData/test_FD003.txt",
+        "CMAPSSData/test_FD004.txt"
+      ],
+      "default": "CMAPSSData/train_FD001.txt"
+    }
+  ]
+}
