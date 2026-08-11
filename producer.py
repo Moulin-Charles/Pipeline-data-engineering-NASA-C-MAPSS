@@ -1,10 +1,14 @@
-import json
+import json  # noqa: I001
 import sys
 import time
-
+from pathlib import Path
 from confluent_kafka import Producer
 
 chemin_fichier = sys.argv[1] if len(sys.argv) > 1 else "CMAPSSData/train_FD001.txt"
+
+my_files = Path(chemin_fichier).stem
+
+split, dataset = my_files.split("_")
 
 Naming = ["engine_id", "cycle"] + [f"setting_{i}" for i in range(1, 4)] + [f"sensor_{i}" for i in range(1, 22)]
 
@@ -33,12 +37,9 @@ with open(chemin_fichier, "r", encoding="utf-8") as fichier:
             print(f"Ligne incorrecte : {len(valeurs)} valeurs")
             continue
 
-        donnees = {}
-        for i, nom in enumerate(Naming):
-            if i < 2:          # engine_id, cycle
-                donnees[nom] = int(valeurs[i])
-            else:               # settings + capteurs
-                donnees[nom] = float(valeurs[i])
+        donnees = {"split": split, "dataset": dataset}
+        for i, (nom, valeur) in enumerate(zip(Naming, valeurs)):
+            donnees[nom] = int(valeur) if i < 2 else float(valeur)
 
         json_data = json.dumps(donnees, ensure_ascii=False)
 
