@@ -1,0 +1,94 @@
+services:
+
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: example
+  adminer :
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  redpanda:
+    image: docker.redpanda.com/redpandadata/redpanda:v26.2.1
+
+    command:
+      - redpanda
+      - start
+
+      # Kafka
+      - --kafka-addr
+      - internal://0.0.0.0:9092,external://0.0.0.0:19092
+
+      - --advertise-kafka-addr
+      - internal://redpanda:9092,external://localhost:19092
+
+      # RPC interne
+      - --rpc-addr
+      - redpanda:33145
+
+      - --advertise-rpc-addr
+      - redpanda:33145
+
+      # Configuration développement
+      - --mode
+      - dev-container
+
+      - --smp
+      - "1"
+
+    ports:
+      - "19092:19092"
+      - "9644:9644"
+
+    volumes:
+      - redpanda-data:/var/lib/redpanda/data
+  
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.5.0
+    container_name: elasticsearch
+
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+
+    ports:
+      - "9200:9200"
+
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+
+    mem_limit: 1g
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:9200/_cluster/health || exit 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:9.5.0
+    container_name: kibana
+
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+
+    ports:
+      - "5601:5601"
+
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+
+
+volumes:
+  redpanda-data:
+  elasticsearch-data:
+
