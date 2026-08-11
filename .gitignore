@@ -1,0 +1,32 @@
+# --- donnees : le dataset NASA se telecharge, il ne se commite pas ---
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+*.csv
+*.zip
+
+# --- environnement Python ---
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# --- outillage ---
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- Docker / services ---
+volumes/
+*.log
+
+# --- systeme ---
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# --- secrets ---
+.env
