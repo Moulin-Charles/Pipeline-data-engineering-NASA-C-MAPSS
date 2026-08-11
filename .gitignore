@@ -30,3 +30,9 @@ desktop.ini
 
 # --- secrets ---
 .env
+
+# --- datas ---
+CMAPSSData/
+
+# --- docs ---
+docs/
