@@ -3,9 +3,9 @@ CREATE TABLE Motor (
     DATASET TEXT NOT NULL,
     ENGINE_ID INTEGER NOT NULL,
     CYCLE INTEGER NOT NULL,
-    SETTINGS_1 NUMERIC,
-    SETTINGS_2 NUMERIC,
-    SETTINGS_3 NUMERIC,
+    setting_1 NUMERIC,
+    setting_2 NUMERIC,
+    setting_3 NUMERIC,
     sensor_1 NUMERIC,
     sensor_2 NUMERIC,
     sensor_3 NUMERIC,
@@ -26,6 +26,6 @@ CREATE TABLE Motor (
     sensor_18 NUMERIC,
     sensor_19 NUMERIC,
     sensor_20 NUMERIC,
-    sensor_21 NUMERIC
-    UNIQUE (TYPE_DATA, DATASET, ENGINE_ID, CYCLE)
+    sensor_21 NUMERIC,
+    UNIQUE (SPLIT, DATASET, ENGINE_ID, CYCLE)
 );
