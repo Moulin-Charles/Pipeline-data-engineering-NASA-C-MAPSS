@@ -10,6 +10,16 @@ services:
       - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U postgres"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
   adminer :
     image: adminer
     restart: always
@@ -47,6 +57,16 @@ services:
     ports:
       - "19092:19092"
       - "9644:9644"
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:9644/v1/status/ready || exit 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
     volumes:
       - redpanda-data:/var/lib/redpanda/data
@@ -91,6 +111,23 @@ services:
       elasticsearch:
         condition: service_healthy
 
+  producer:
+    build: .
+    volumes:
+      - ./CMAPSSData:/Scripts_Python/CMAPSSData/
+    command: python producer.py
+    depends_on:
+      redpanda:
+        condition: service_healthy
+
+  consumer:
+    build: .
+    command: python consumer.py
+    depends_on:
+      db:
+        condition: service_healthy
+      redpanda:
+        condition: service_healthy
 
 volumes:
   redpanda-data:

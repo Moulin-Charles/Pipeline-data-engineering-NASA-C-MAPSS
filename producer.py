@@ -14,7 +14,7 @@ Naming = ["engine_id", "cycle"] + [f"setting_{i}" for i in range(1, 4)] + [f"sen
 
 # Configuration Kafka
 producer = Producer({
-    "bootstrap.servers": "localhost:19092"
+    "bootstrap.servers": "redpanda:9092"
 })
 
 topic = "cmapss-telemetry"

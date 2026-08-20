@@ -3,14 +3,14 @@ import psycopg2
 from confluent_kafka import Consumer
 
 consumer = Consumer({
-    "bootstrap.servers": "localhost:19092",
+    "bootstrap.servers": "redpanda:9092",
     "group.id": "redpanda-to-postgres",
     "auto.offset.reset": "earliest",
 })
 consumer.subscribe(["cmapss-telemetry"])
 
 conn = psycopg2.connect(
-    host="localhost", port=5432,
+    host="db", port=5432,
     dbname="postgres", user="postgres", password="example",
 )
 cur = conn.cursor()
