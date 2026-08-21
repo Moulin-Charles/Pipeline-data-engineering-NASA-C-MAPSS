@@ -1,0 +1,32 @@
+// Elasticsearch queries — Kibana Dev Tools console syntax, not strict JSON
+// (the "GET ..." line and the "//" comments are Kibana-console-specific, paste directly into Dev Tools)
+
+// Anomalies for a single engine: all cycles where sensor_2 deviated more than
+// 2 standard deviations from that engine's own average
+GET cmapss-telemetry/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "term": { "engine_id": 1 } },
+        { "term": { "anomalie": true } }
+      ]
+    }
+  }
+}
+
+// Engine comparison: average sensor_2 value per engine, across all engines
+// "size": 0 (root) suppresses individual documents, only the aggregation is returned
+// "size" inside "terms" raises the bucket limit above the default of 10, to cover every engine
+GET cmapss-telemetry/_search
+{
+  "size": 0,
+  "aggs": {
+    "par_moteur": {
+      "terms": { "field": "engine_id", "size": 100 },
+      "aggs": {
+        "moyenne_sensor_2": { "avg": { "field": "sensor_2" } }
+      }
+    }
+  }
+}

@@ -12,20 +12,21 @@ conn = psycopg2.connect(
 )
 cur = conn.cursor()
 
-es.indices.create(
-    index="cmapss-telemetry",
-    mappings={
-        "properties": {
-            "split": {"type": "keyword"},
-            "dataset": {"type": "keyword"},
-            "engine_id": {"type": "integer"},
-            "cycle": {"type": "integer"},
-            "sensor_2": {"type": "float"},
-            "anomalie": {"type": "boolean"},
-            "date_ingestion": {"type": "date"},
+if not es.indices.exists(index="cmapss-telemetry"):
+    es.indices.create(
+        index="cmapss-telemetry",
+        mappings={
+            "properties": {
+                "split": {"type": "keyword"},
+                "dataset": {"type": "keyword"},
+                "engine_id": {"type": "integer"},
+                "cycle": {"type": "integer"},
+                "sensor_2": {"type": "float"},
+                "anomalie": {"type": "boolean"},
+                "date_ingestion": {"type": "date"},
+            }
         }
-    }
-)
+    )
 
 while True:
     cur.execute("""
