@@ -33,3 +33,6 @@ desktop.ini
 
 # --- datas ---
 CMAPSSData/
+
+# --- notes personnelles d'apprentissage (pas des livrables) ---
+docs/notes_etape*.md
